@@ -1,25 +1,49 @@
-# Cài đặt minBERT và cải tiến với phương pháp knowledge injection, contrastive learning
-Thành viên:
-- Tăng Vĩnh Hà, MSV: 22028129
-- Vũ Nguyệt Hằng, MSV: 22028079
-- Ngô Tùng Lâm, MSV: 22028092
+# Installing minBERT and Enhancing with Knowledge Injection and Contrastive Learning
 
-Repo cho bài tập lớn môn Xử lý ngôn ngữ tự nhiên, lớp 7 học kì 1 năm học 2024 - 2025. Chi tiết dự án ở trong báo cáo cuối kì. 
+## Team Members:
+- Tăng Vĩnh Hà, Student ID: 22028129
+- Vũ Nguyệt Hằng, Student ID: 22028079
+- Ngô Tùng Lâm, Student ID: 22028092
 
-# Chi tiết dự án
-- Cài đặt minBERT: 
-    - File `tokenizer` và `bert_base` được dùng để tokenize input của câu đầu vào thành các input_ids theo bộ vocab có trước của google/bert_uncased_L-4_H-256_A-4 trên HuggingFace và khởi tạo tham số cho mô hình minBERT (phương thức `init_weights`).
-    - File `bert`: cài đặt các thành phần của kiến trúc BERT (chi tiết giải thích được ghi chú trong phần comment).
-    - File `classifier`: thêm các extra layer cho BERT từ mô hình BERT cho các downstream task cụ thể, trong project này là classify.
-- Cải tiến với phương pháp knowledge injection: tích hợp thêm author embedding thu được Pytorch-BigGraph pretrained embedding của Wikidata Knowledge Graph. Điều khiển bằng argument `--use_author` trong `classifier.py`.
-- Cải tiến với phương pháp contrastive learning: nhóm tiếp tục pretrain BERT với SimCSE framework:
-    - SimCSE unsupervised contrastive learning: sử dụng dữ liệu contrastive là các batch câu được forward qua model `bert` 2 lần (model sinh ra embedding) để được apply 2 `attention_mask` khác nhau cho positive pairs, các câu khác trong cùng 1 batch là negative pairs, hàm tối ưu là contrastive loss. Bộ dữ liệu sử dụng là: wiki1m (lấy 38% so với số lượng ban đầu). Được cài đặt trong file `classifier_unsupervised_CL`, chỉnh sửa từ file `classifier` ở chỗ load dữ liệu và hàm `train` (định nghĩa loss khác).
-    - SimCSE supervised contrastive learning: sử dụng dữ liệu contrastive là bộ ba câu anchor - positive - negative trong bộ dữ liệu NLI, hàm tối ưu là contrastive loss. Được cài đặt trong file `classifier_supervised_CL`, chỉnh sửa từ file `classifier` ở chỗ load dữ liệu và hàm `train` (định nghĩa loss khác).
-- Kết quả thử nghiệm: ở trong report cuối kì. 
-- Cách chạy các thí nghiệm: vui lòng xem trong phần phụ lục notebook Kaggle của nhóm ở trong report cuối kì. 
-# Cấu trúc repo
-- Folder `data`: dữ liệu cho các thí nghiệm
-- Folder `data_small`: dữ liệu cho việc debug nhanh trên laptop. 
+This repository is for the Natural Language Processing course project, class 7, Semester 1, Academic Year 2024 - 2025. Project details are included in the final report.
 
-# Acknowledgement
-Nhóm tham khảo repo code gốc [`minBERT`](https://github.com/neubig/minbert-assignment).
+## Project Details
+
+### Installing minBERT:
+- **Tokenizer and BERT Base Files**:
+    - The `tokenizer` and `bert_base` files are used to tokenize input sentences into `input_ids` based on the predefined vocabulary of `google/bert_uncased_L-4_H-256_A-4` from HuggingFace and initialize parameters for the minBERT model (`init_weights` method).
+- **BERT File (`bert`)**:
+    - Implements the components of the BERT architecture (detailed explanations are provided in the comments).
+- **Classifier File (`classifier`)**:
+    - Adds extra layers to BERT for downstream classification tasks. In this project, the focus is on text classification.
+
+### Enhancement with Knowledge Injection:
+- Integrates **author embeddings** obtained from **PyTorch-BigGraph pretrained embeddings** of the **Wikidata Knowledge Graph**.
+- Controlled by the argument `--use_author` in `classifier.py`.
+
+### Enhancement with Contrastive Learning:
+The team further pretrains BERT using the **SimCSE framework**:
+
+- **SimCSE Unsupervised Contrastive Learning**:
+    - Uses contrastive data where batches of sentences are forwarded through the `bert` model twice (generating embeddings) with two different `attention_mask` applications to form positive pairs, while other sentences in the same batch serve as negative pairs.
+    - The optimization function is **contrastive loss**.
+    - The dataset used is **wiki1m**, taking **38% of the original dataset size**.
+    - Implemented in `classifier_unsupervised_CL`, modified from `classifier` by adjusting the data loading and `train` function (defining a different loss function).
+
+- **SimCSE Supervised Contrastive Learning**:
+    - Uses contrastive data in triplets: **anchor - positive - negative** from the **NLI dataset**.
+    - The optimization function is **contrastive loss**.
+    - Implemented in `classifier_supervised_CL`, modified from `classifier` by adjusting the data loading and `train` function (defining a different loss function).
+
+### Experimental Results:
+- Detailed results are included in the final report.
+
+### How to Run Experiments:
+- Please refer to the **Kaggle notebook appendix** in the final report.
+
+## Repository Structure
+- **`data/`**: Contains datasets for experiments.
+- **`data_small/`**: Contains smaller datasets for quick debugging on a laptop.
+
+## Acknowledgement
+- This project references the original [`minBERT`](https://github.com/neubig/minbert-assignment) repository.
